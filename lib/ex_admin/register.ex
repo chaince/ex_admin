@@ -165,6 +165,12 @@ defmodule ExAdmin.Register do
         options ->
           Keyword.get(options, :controller_route, controller_route)
       end
+      resource_name = resource_name(module)
+      resource_name = case Module.get_attribute(__MODULE__, :options) do
+        nil -> resource_name
+        options ->
+          Keyword.get(options, :resource_name, resource_name)
+      end
       plugs = case Module.get_attribute(__MODULE__, :controller_plugs) do
         nil -> []
         list -> Enum.reverse list
@@ -191,7 +197,7 @@ defmodule ExAdmin.Register do
                 title_actions: &ExAdmin.default_resource_title_actions/2,
                 type: :resource,
                 resource_model: module,
-                resource_name: resource_name(module),
+                resource_name: resource_name,
                 query_opts: query_opts,
                 controller_route: controller_route,
                 menu: menu_opts,
